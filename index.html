@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
+    <title>SerialTTerminal</title>
+  </head>
+
+  <body>
+    <!-- TOPBAR -->
+    <div id="topbar">
+      <!-- Connection -->
+      <div>
+        <button id="connect">Connect</button>
+        <label><input type="checkbox" id="show_all">Show all devices</label>
+      </div>
+
+      <!-- Control buttons -->
+      <div>
+        <button id="calibrate" disabled>Calibrate</button>
+        <button id="map" disabled>Map</button>
+        <button id="run" disabled>Run</button>
+        <button id="stop" disabled>Stop</button>
+      </div>
+    </div>
+
+    <main>
+      <!-- SETTINGS -->
+      <div id="settings" class="card">
+        <h2>Settings</h2>
+  
+        <!-- Custom list view -->
+        <div id="custom_list"></div>
+  
+        <!-- Add custom setting  -->
+        <!-- TODO close it (just remove "open") -->
+        <details open>
+          <summary style="margin-bottom: 10px;">New command</summary>
+          <div class="grid">
+            <div>
+              <label for="new_name">Name</label>
+              <input id="new_name" type="text" placeholder="translational_kp" maxlength="32" autocomplete="off">
+            </div>
+            <div>
+              <label for="new_id">ID (0x01 to 0x6F)</label>
+              <input id="new_id" type="text" placeholder="0x20" autocomplete="off">
+            </div>
+          </div>
+          <label>Fields (name and type)</label>
+          <div id="new_fields"></div>
+          <div class="row">
+            <button id="add_field" type="button">+ field</button>
+            <button id="remove_field" type="button">- field</button>
+          </div>
+          <div id="new_error"></div>
+          <button id="add_command" class="primary" type="button">Add command</button>
+        </details>
+  
+        <div class="row">
+          <button id="export" type="button">Export</button>
+          <button id="import" type="button">Import</button>
+        </div>
+        
+        <!-- Hidden file import -->
+        <input id="file_import" type="file" accept=".json,application/json" hidden>
+      </div>
+  
+      <!-- MAP -->
+      <div class="card">
+        <h2>Map</h2>
+        <div id="map">
+        
+        </div>
+      </div>
+  
+      <!-- TERMINAL -->
+      <div id="terminal_container" class="card">
+        <button id="clear_terminal" type="button">Clear</button>
+        <div id="terminal">
+  
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="scripts/main.js"></script>
+  </body>
+
+</html>
+
+<!-- References -->
+<!-- https://webserialterminal.com/ -->
+<!-- https://serverless.tools/web-serial-terminal/ -->
+ 

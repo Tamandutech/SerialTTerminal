@@ -1,0 +1,112 @@
+:root {
+  /* https://en.wikipedia.org/wiki/Ordinal_numeral */
+  /* https://www.color-hex.com/color-palette/1085413 */
+  --primary: #274e13;
+  --secondary: #6aa84f;
+  --tertiary: #93c47d;
+  --quaternary: #b6d7a8;
+  --quinary: #d9ead3;
+
+  --bg: linear-gradient(135deg, #f5f7fa 0%, #eef2f7 100%);
+  --card_bg: #f5f7fa;
+  /* TODO put a darker color */
+  --terminal_bg: white;
+
+  --subtle: #5c6675;
+  --danger: #d1242f;
+  --ok: #1a7f37;
+  --warn: #9a6700;
+  --tx: #0969da;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* TODO */
+    --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    /* --card_bg: #0f172a; */
+    /* --terminal_bg: #1e293b; */
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+main {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+label { display: block; }
+
+#topbar {
+  background-color: var(--tertiary);
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 0 0 20px 20px;
+}
+
+#settings {
+}
+
+#terminal_container {
+  /* TODO set monospace font */
+  background-color: var(--terminal_bg);
+  min-height: 200px;
+}
+
+.card {
+  border-style: solid;
+  border-radius: 25px;
+  border-width: 1px 10px;
+  border-color: var(--secondary);
+  box-shadow: 0 0 10px black;
+
+  background-color: var(--card_bg);
+
+  padding: 15px 10px;
+  margin: 15px 0;
+}
+
+.command_card {
+  background-color: yellow;
+}
+
+.command_head {
+  background-color: lightblue;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.field {
+
+}
+
+.field_row {
+
+}
+
+.primary {
+
+}
+
+.field_row {
+  
+}
+
+.line { padding: 1px 0; }
+.line.tx { color: var(--tx); }
+.line.ok { color: var(--ok); } */
+.line.nack, .line.log-error { color: var(--danger); }
+.line.warn, .line.log-warning { color: var(--warn); }
+.line.log-debug, .line.sys { color: var(--subtle); }
+.line.sys { font-style: italic; }
