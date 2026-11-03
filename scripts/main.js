@@ -536,6 +536,12 @@ function main () {
 
   if (!navigator.bluetooth) 
     alert ("This seems to not support Web Bluetooth. Use a Chromium based browser (computer or Android) or check if this feature isn't disabled");
+
+  if ("serviceWorker" in navigator && location.protocol.startsWith ("http")) {
+    navigator.serviceWorker.register ("./scripts/service_worker.js").catch (function (error) {
+      add_line ("sys", "Service worker not registered: " + error.message);
+    });
+  }
 }
 
 main ();
