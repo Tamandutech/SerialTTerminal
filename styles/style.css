@@ -73,11 +73,12 @@ label { display: block; }
 }
 
 .command_card {
-  background-color: yellow;
+  background-color: rgba(255, 255, 0, 0.284);
 }
 
 .command_head {
   background-color: lightblue;
+  margin-top: 15px;
 }
 
 .grid {

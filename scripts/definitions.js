@@ -25,8 +25,10 @@ export const STORAGE_KEY                    = "robot-web.commands.v1";
 /******************************************************************************\
                                     COMMANDS                                    
 \******************************************************************************/
-export const RESERVED_NAMES                 = ["Stop", "Set State"];
-export const RESERVED_IDS                   = [0x01, 0x02];
+export const RESERVED = [
+    {name : "Stop",                           id : 0x01},
+    {name : "Set Action",                     id : 0x02},
+];
 export const CMD_ID_MIN                     = 0x01;
 export const CMD_ID_MAX                     = 0x6F;
 export const MAX_COMMANDS                   = 32;

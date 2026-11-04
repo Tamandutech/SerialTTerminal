@@ -199,7 +199,7 @@ function protocol_level_class (level) {
  * Buffer layout:  [0]=SOF  [1]=LEN  [2]=CMD  [3...]=payload  [last]=CRC
  * Payload always starts on index 3.
  */
-function protocol_new_frame (command, payload_length) {
+export function protocol_new_frame (command, payload_length) {
   const frame = new Uint8Array  (payload_length + 4);
   frame[0] = PROTOCOL_SOF;
   // LEN = CMD + payload
@@ -209,7 +209,7 @@ function protocol_new_frame (command, payload_length) {
 }
 
 // Fills the last byte with the CRC of LEN, CMD and payload
-function protocol_seal_frame (frame) {
+export function protocol_seal_frame (frame) {
   const n = frame.length;
   frame[n - 1] = protocol_crc8 (frame, 1, n - 2);
   return frame;

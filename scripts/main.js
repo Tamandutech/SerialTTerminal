@@ -3,18 +3,21 @@
 // Imports
 import {
   decoder_reset, decoder_feed, protocol_hex, interp_frame,
-  protocol_set_cmd_name_lookup, decoder_init, interp_reset, protocol_build_custom
+  protocol_set_cmd_name_lookup, decoder_init, interp_reset, protocol_build_custom,
+  protocol_new_frame,
+  protocol_seal_frame
 } from "./protocol.js";
 
 import {
   commands_count, commands_get, commands_add, commands_to_json,
   commands_parse_id, commands_format_id, commands_from_json, commands_name_of,
-  commands_remove
+  commands_remove, commands_clear
 } from "./commands.js";
 
 import {
   MAX_FORM_FIELDS, PROTOCOL_FIELD_TYPES, SERVICE_UUID, WRITE_PREFERRED_UUID, 
-  CHUNK_SIZE, STORAGE_KEY
+  CHUNK_SIZE, STORAGE_KEY,
+  RESERVED
 } from "./definitions.js";
 
 
@@ -22,6 +25,12 @@ import {
 const ui = {
   show_all        : document.getElementById ("show_all"),
   connect         : document.getElementById ("connect"),
+
+  stop            : document.getElementById ("stop"),
+  run             : document.getElementById ("run"),
+  map             : document.getElementById ("map"),
+  calibrate       : document.getElementById ("calibrate"),
+  run_test        : document.getElementById ("run_test"),
 
   clear_terminal  : document.getElementById ("clear_terminal"),
   terminal        : document.getElementById ("terminal"),
@@ -55,7 +64,7 @@ let global = {
   custom_inputs           : [],
   custom_send_buttons     : [],
 
-  buttons_need_connection : []
+  buttons_need_connection : [ui.stop, ui.run, ui.map, ui.calibrate, ui.run_test]
 };
 
 function pad_3 (text) {
@@ -293,6 +302,24 @@ function app_save_commands () {
   }
 }
 
+function app_load_commands () {
+  if (typeof localStorage === "undefined") return;
+
+  let text = null;
+  try {
+    text = localStorage.getItem (STORAGE_KEY);
+  } catch (error) {
+    return;
+  }
+  if (text === null) return;
+
+  const error = { message: "" };
+  if (!commands_from_json (text, error)) {
+    add_line ("warn", "Saved settings was ignored: " + error.message);
+    commands_clear ();
+  }
+}
+
 function app_render_custom () {
   ui.custom_list.textContent = "";
   global.custom_inputs = [];
@@ -455,7 +482,7 @@ function on_custom_clicked (event) {
 
 function on_button_export_clicked () {
   const text = commands_to_json ();
-  const blob = new Blob ([text], { type: 'application/json' });
+  const blob = new Blob ([text], { type: "application/json" });
   const url = URL.createObjectURL (blob);
 
   // This is a workaround to export the data offiline/without a server
@@ -515,6 +542,31 @@ function on_button_clear_terminal_clicked () {
   ui.terminal.textContent = "";
 }
 
+function on_button_stop_clicked () {
+  const unsealed = protocol_new_frame (RESERVED[0].id, 0);
+  const frame = protocol_seal_frame (unsealed);
+
+  app_send ("Stop", frame, true);
+}
+
+function on_button_action_clicked (action_id) {
+  const values = [action_id];
+  const fields = [{
+    name : "Action",
+    type : "uint8"
+  }];
+  const error = { message: "" };
+  const frame = protocol_build_custom (RESERVED[1].id, fields, values, error);
+
+  if (frame === null) {
+    add_line ("nack", "Action: " + error.message);
+    return;
+  }
+
+  app_send ("Action", frame, false);
+}
+
+
 function main () {
   decoder_init (on_decoder_frame, on_decoder_text);
   protocol_set_cmd_name_lookup (commands_name_of);
@@ -529,11 +581,20 @@ function main () {
   ui.file_import.addEventListener ("change", on_file_selected);
   ui.custom_list.addEventListener ("click", on_custom_clicked);
 
-  // Show at least 1 field for adding a new comand
-  app_add_field_row ();
+  ui.stop.addEventListener ("click", on_button_stop_clicked);
+  ui.run.addEventListener ("click", () => {on_button_action_clicked (2)});
+  ui.map.addEventListener ("click", () => {on_button_action_clicked (3)});
+  ui.calibrate.addEventListener ("click", () => {on_button_action_clicked (4)});
+  ui.run_test.addEventListener ("click", () => {on_button_action_clicked (5)});
 
   set_connected (false);
 
+  app_load_commands ();
+  app_render_custom ();
+
+  // Show at least 1 field for adding a new comand
+  app_add_field_row ();
+  
   if (!navigator.bluetooth) 
     alert ("This seems to not support Web Bluetooth. Use a Chromium based browser (computer or Android) or check if this feature isn't disabled");
 

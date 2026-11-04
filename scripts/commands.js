@@ -8,8 +8,7 @@ import {
   CMD_ID_MAX,
   FORMAT_NAME,
   FORMAT_VERSION,
-  RESERVED_NAMES,
-  RESERVED_IDS
+  RESERVED
 } from "./definitions.js";
 import { protocol_type_size } from "./protocol.js";
 
@@ -54,8 +53,8 @@ function normalize (raw, error) {
 function list_has_name (list, name) {
   const lower = name.toLowerCase ();
 
-  for (let i = 0; i < RESERVED_NAMES.length; i++)
-    if (RESERVED_NAMES[i] === lower)
+  for (let i = 0; i < RESERVED.length; i++)
+    if (RESERVED[i].name === lower)
       return true;
 
   for (let i = 0; i < list.length; i++)
@@ -66,8 +65,8 @@ function list_has_name (list, name) {
 }
 
 function list_has_id (list, id) {
-  for (let i = 0; i < RESERVED_IDS.length; i++) 
-    if (RESERVED_IDS[i] === id)
+  for (let i = 0; i < RESERVED.length; i++) 
+    if (RESERVED[i].id === id)
       return true;
   
   for (let i = 0; i < list.length; i++) 
@@ -249,4 +248,8 @@ export function commands_remove (i) {
   if (!Number.isInteger (i) || i < 0 || i >= commands.length) return false;
   commands.splice (i, 1);
   return true;
+}
+
+export function commands_clear () {
+  commands = [];
 }
